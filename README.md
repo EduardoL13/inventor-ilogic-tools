@@ -1,84 +1,61 @@
-# 🔧 Inventor iLogic – Auto Constrain Planes to Assembly Origin
+# Autodesk Inventor Macros & iLogic Rules
 
-This iLogic rule automatically adds constraints between the **origin planes of every component** in an assembly and the **origin planes of the assembly itself**.  
+This repository contains a collection of Autodesk Inventor automation tools (macros and iLogic rules) that I’ve created to save time and simplify repetitive modeling tasks.  
 
-It’s a small but powerful time-saver if you:  
-- Work with **multibody skeleton modeling**.  
-- Prefer **fully constrained parts** instead of grounding them by default.  
-- Want to avoid the repetitive task of manually constraining each component’s planes.  
-
----
-
-## 📌 Example Use Case
-When you create an assembly from multibodies using **"Make Components"**, Inventor grounds each part. If you prefer a **fully constrained workflow**, this iLogic rule aligns all components’ origin planes with the assembly origin automatically.
-
-Instead of adding constraints one by one, you can run this script and get everything constrained in **seconds**.
+The goal is to provide tools that are:  
+- ✅ **Practical** → built for real modeling needs.  
+- ✅ **Reusable** → adaptable to different projects.  
+- ✅ **Open** → free to use and improve.  
 
 ---
 
-## ▶️ How to Use
-For ilogic:
-1. Open your Inventor assembly.  
-2. Go to the **iLogic Rule Editor**.  
-3. Copy-paste the code from [`AutoConstrainPlanes.vb`](AutoConstrainPlanes.vb).  
-4. Run the rule → all components will be constrained to the assembly origin.  
+## 📂 Repository Structure
 
-To use it as a macro:
-1. Access the vb editor in the manage tab
-2. Create a module in the ApplicationDefault (if you want to be able to access the macro in every assembly you open)
-3. Copy and paste de macro version code
-4. run the macro for the ApplicationDefault project
+- **`main` branch** → only finished, tested, and documented tools.  
+  - Folder: `finished/`  
+
+- **`dev` branch** → includes experimental or in-progress tools.  
+  - Folders: `finished/` + `in-progress/`  
+
+This way, you can choose:
+- If you want **stable, reliable macros** → stick to `main`.  
+- If you’re curious about **what I’m currently working on** → check out `dev`.  
+
 ---
 
-## 💻 Code
-Here’s the full code:  
+## ✅ Finished Tools (in `main`)
+| Tool | Type | Description |
+|------|------|-------------|
+| `OriginConstraintRule.iLogic.vb` | iLogic Rule | Automatically constrains the origin planes of all components in an assembly to the assembly’s origin planes. Useful for skeleton modeling workflows where grounding parts is not preferred. |
+| `AlignPlanesMacro.bas` | Macro | [Coming soon] |
 
-```vbnet
-' Auto Constrain Planes to Assembly Origin
-' Author: Eduardo López
+---
 
-' Sub Main ()
+## 🚧 In-Progress Tools (in `dev`)
+| Tool | Type | Status |
+|------|------|--------|
+| `AutoDimensionMacro.bas` | Macro | 🚧 Working on automatic placement of dimensions for specific part templates. |
+| `CustomExportRule.iLogic.vb` | iLogic Rule | 🚧 Early version of a rule to batch export components with custom naming. |
 
-' Dim currentDoc As AssemblyDocument = ThisApplication.ActiveDocument
-' AssemblyOriginCons(currentDoc)
-	
-' End Sub
+---
 
+## 🛠️ How to Use
+1. Download the file you need from the `finished/` folder in the `main` branch.  
+2. For **iLogic rules** → copy the `.vb` code into an iLogic rule inside Inventor.  
+3. For **Macros** → import the `.bas` file into the VBA editor in Inventor.  
+4. Run the tool and save time 🚀.  
 
-' Sub AssemblyOriginCons(assemDef As AssemblyDocument)
-	
-' 'Sub that runs through the occurrences of the assembly to constraint their origin planes to those of the current aassembly 
-' 'given that those occurrences have no prior existing constraints or that they are not part of pattern.
+---
 
-' 'Set planes assembly origin planes
-' Dim PlanoE1 As WorkPlane = assemDef.ComponentDefinition.WorkPlanes.Item(1)
-' Dim PlanoE2 As WorkPlane = assemDef.ComponentDefinition.WorkPlanes.Item(2)
-' Dim PlanoE3 As WorkPlane = assemDef.ComponentDefinition.WorkPlanes.Item(3)
-	
-' For Each compOcc As ComponentOccurrence In assemDef.ComponentDefinition.Occurrences
-' 	If compOcc.Constraints.Count = 0 And compOcc.PatternElement Is Nothing Then
-	
-' 	' Set occurrences ogigin planes
-' 	    Dim Plano1 As WorkPlane = compOcc.Definition.Workplanes.Item(1) 
-' 	    Dim Plano2 As WorkPlane = compOcc.Definition.Workplanes.Item(2) 
-' 	    Dim Plano3 As WorkPlane = compOcc.Definition.Workplanes.Item(3) 
-		
-' 	' Set proxies for making the constraints
-' 	    Dim APlano1 As WorkPlaneProxy
-'        compOcc.CreateGeometryProxy(Plano1,APlano1)
-' 	    Dim APlano2 As WorkPlaneProxy
-'         compOcc.CreateGeometryProxy(Plano2,APlano2)
-' 	    Dim APlano3 As WorkPlaneProxy
-'        compOcc.CreateGeometryProxy(Plano3, APlano3)
-		
-' 	' Constraints application
-' 	    assemDef.ComponentDefinition.Constraints.AddFlushConstraint(APlano1,PlanoE1,0)
-' 	    assemDef.ComponentDefinition.Constraints.AddFlushConstraint(APlano2,PlanoE2,0)
-' 	    assemDef.ComponentDefinition.Constraints.AddFlushConstraint(APlano3,PlanoE3,0)
-	
-'     End If
-		
-' Next
+## 💡 Contributing
+- If you try one of the tools and improve it, feel free to fork this repo and submit a pull request.  
+- If you have an idea for automation, open an issue so we can discuss it.  
 
-' End Sub	
+---
+
+## 📬 Contact
+If you’d like to connect or discuss automation ideas, feel free to reach out via [LinkedIn](your-linkedin-url) or leave a message here.  
+
+---
+
 
