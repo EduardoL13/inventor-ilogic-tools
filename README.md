@@ -26,8 +26,8 @@ This way, you can choose:
 ## ✅ Finished Tools (in `main`)
 | Tool | Type | Description |
 |------|------|-------------|
-| `OriginConstraintRule.iLogic.vb` | iLogic Rule | Automatically constrains the origin planes of all components in an assembly to the assembly’s origin planes. Useful for skeleton modeling workflows where grounding parts is not preferred. |
-| `AlignPlanesMacro.bas` | Macro | [Coming soon] |
+| `OriginConstraintRule.txt` | iLogic Rule | Automatically constrains the origin planes of all components in an assembly to the assembly’s origin planes. Useful for skeleton modeling workflows where grounding parts is not preferred. |
+| `AssemblyOriginCons.txt` | Macro | Automatically constrains the origin planes of all components in an assembly to the assembly’s origin planes. Useful for skeleton modeling workflows where grounding parts is not preferred. |
 
 ---
 
@@ -41,8 +41,8 @@ This way, you can choose:
 
 ## 🛠️ How to Use
 1. Download the file you need from the `finished/` folder in the `main` branch.  
-2. For **iLogic rules** → copy the `.vb` code into an iLogic rule inside Inventor.  
-3. For **Macros** → import the `.bas` file into the VBA editor in Inventor.  
+2. For **iLogic rules** → copy the `.txt` code into an iLogic rule inside Inventor.  
+3. For **Macros** → import the `.txt` file into the VBA editor in Inventor.  
 4. Run the tool and save time 🚀.  
 
 ---
@@ -54,7 +54,7 @@ This way, you can choose:
 ---
 
 ## 📬 Contact
-If you’d like to connect or discuss automation ideas, feel free to reach out via [LinkedIn](your-linkedin-url) or leave a message here.  
+If you’d like to connect or discuss automation ideas, feel free to reach out via [LinkedIn](www.linkedin.com/in/eduardo-lopez-cobos) or leave a message here.  
 
 ---
 
