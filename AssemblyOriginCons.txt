@@ -1,5 +1,5 @@
 Sub AssemblyOriginCons()
-    
+'Macro for VBA Editor    
 'Sub that runs through the occurrences of the assembly to constraint their origin planes to those of the current aassembly
 'given that those occurrences have no prior existing constraints or that they are not part of pattern.
 
@@ -53,3 +53,4 @@ Sub AssemblyOriginCons()
     Next
 
 End Sub
+
