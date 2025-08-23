@@ -34,8 +34,11 @@ This way, you can choose:
 ## 🚧 In-Progress Tools (in `dev`)
 | Tool | Type | Status |
 |------|------|--------|
-| `AutoDimensionMacro.bas` | Macro | 🚧 Working on automatic placement of dimensions for specific part templates. |
-| `CustomExportRule.iLogic.vb` | iLogic Rule | 🚧 Early version of a rule to batch export components with custom naming. |
+| `AssignPropsFromExcel.txt` | iLogic Rule | 🚧 Early version of a rule to assign properties to occurrences of an assembly listed in a specified worksheet within an Excel File. |
+| `ExportKeyParams.txt` | iLogic Rule | 🚧 Early version of a rule to export parameters checked as key to a specified worksheet within an Excel file. |
+| `ImportKeyParams.txt` | iLogic Rule | 🚧 Early version of a rule to import parameters from specified worksheet within an Excel file. |
+| `SetSpreadsheetAndWS.txt` | Macro | 🚧 Early version of a macro that lets you browse the windows explorer to look for an Excel file and assign it´s path as an invisible property with a given name for a worksheet . |
+
 
 ---
 
