@@ -1,5 +1,5 @@
 Sub Main ()
-
+'Ilogic rule 
 Dim currentDoc As AssemblyDocument = ThisApplication.ActiveDocument
 AssemblyOriginCons(currentDoc)
 	
@@ -42,3 +42,4 @@ For Each compOcc As ComponentOccurrence In assemDef.ComponentDefinition.Occurren
 Next
 
 End Sub	
+
