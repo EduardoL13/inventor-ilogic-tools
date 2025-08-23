@@ -1,0 +1,77 @@
+Sub Main()
+
+Dim currentDoc As AssemblyDocument
+Set currentDoc = ThisApplication.ActiveDocument
+
+Dim DSData As PropertySet
+
+
+If currentDoc.PropertySets.PropertySetExists("Spreadsheet Document") = False Then
+
+    Set DSData = currentDoc.PropertySets.Add("Spreadsheet Document")
+    docNameString = BrowseFile()
+    
+    Dim propDocName As Property
+    Set propDocName = DSData.Add(docNameString, "File Name")
+    
+    MsgBox ("File Name:" & propDocName.Value & " has been added")
+    
+Else
+    Set DSData = currentDoc.PropertySets.Item("Spreadsheet Document")
+    docName = DSData.Item(1).Value
+    MsgBox ("Existing worksheet will be used")
+    
+End If
+MsgBox (docName)
+
+End Sub
+
+
+Function browseLocation()
+
+
+    Dim objDialog As Object
+    Dim selectedPath As String
+    
+    ' Create a FolderBrowserDialog
+    Set objDialog = CreateObject("Shell.Application").BrowseForFolder(0, "Select folder to save occurrences", 0, 0)
+    
+    If Not objDialog Is Nothing Then
+        selectedPath = objDialog.Items().Item().Path
+        MsgBox "You selected: " & selectedPath
+        ' You can now use selectedPath to save your files
+        browseLocation = selectedPath
+        
+    Else
+        MsgBox "No folder selected."
+        browseLocation = ""
+        
+    End If
+    
+    
+End Function
+
+
+Function BrowseFile() As String
+    Dim oDlg As FileDialog
+    Call ThisApplication.CreateFileDialog(oDlg)   ' <-- correct way
+
+    With oDlg
+        .DialogTitle = "Select a file"
+        .Filter = "Inventor Files (.ipt;.iam;.idw;.ipn;.dwg)|.ipt;.iam;.idw;.ipn;.dwg|All Files (.)|."
+        .FilterIndex = 1
+        .InitialDirectory = ThisApplication.DesignProjectManager.ActiveDesignProject.WorkspacePath
+        .MultiSelectEnabled = False
+        .CancelError = True
+    End With
+
+    On Error Resume Next
+    oDlg.ShowOpen              ' shows the Open dialog
+    If Err.Number <> 0 Then    ' user canceled
+        BrowseFile = ""
+        Err.Clear
+        Exit Function
+    End If
+
+    BrowseFile = oDlg.FileName ' full path of the chosen file
+End Function
