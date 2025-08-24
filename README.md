@@ -57,7 +57,7 @@ This way, you can choose:
 ---
 
 ## 📬 Contact
-If you’d like to connect or discuss automation ideas, feel free to reach out via [LinkedIn](www.linkedin.com/in/eduardo-lopez-cobos) or leave a message here.  
+If you’d like to connect or discuss automation ideas, feel free to reach out via [www.linkedin.com/in/eduardo-lopez-cobos] or leave a message here.  
 
 ---
 
