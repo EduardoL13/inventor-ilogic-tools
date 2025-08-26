@@ -1,55 +1,54 @@
-Sub Main()
+Sub SetupSpreadsheet()
 
-Dim currentDoc As AssemblyDocument
+' Assuming the active document is an assembly
+Dim currentDoc As Object
+'Dim currentDoc As AssemblyDocument
 Set currentDoc = ThisApplication.ActiveDocument
 
 Dim DSData As PropertySet
 
-
+' Set Spreadsheet Document
 If currentDoc.PropertySets.PropertySetExists("Spreadsheet Document") = False Then
 
-    Set DSData = currentDoc.PropertySets.Add("Spreadsheet Document")
+    Set SSData = currentDoc.PropertySets.Add("Spreadsheet Document")
     docNameString = BrowseFile()
     
     Dim propDocName As Property
-    Set propDocName = DSData.Add(docNameString, "File Name")
+    Set propDocName = SSData.Add(docNameString, "File Name")
     
     MsgBox ("File Name:" & propDocName.Value & " has been added")
     
 Else
-    Set DSData = currentDoc.PropertySets.Item("Spreadsheet Document")
-    docName = DSData.Item(1).Value
-    MsgBox ("Existing worksheet will be used")
+    Set SSData = currentDoc.PropertySets.Item("Spreadsheet Document")
+    docNameString = BrowseFile()
+    SSData.Item(1).Value = docNameString
+    MsgBox ("New File Name:" & SSData.Item(1).Value)
     
 End If
-MsgBox (docName)
+
+' Set worksheet
+
+If currentDoc.PropertySets.PropertySetExists("Worksheet Data") = False Then
+
+    Set worksheetData = currentDoc.PropertySets.Add("Worksheet Data")
+    tabNameString = InputBox("Enter worksheet tab name")
+    
+    Dim propTabName As Property
+    Set propTabName = worksheetData.Add(tabNameString, "Worksheet Name")
+    
+    MsgBox ("Worksheet Name:" & propTabName.Value & " has been added")
+    
+Else
+    Set worksheetData = currentDoc.PropertySets.Item("Worksheet Data")
+    tabNameString = InputBox("Enter worksheet tab name")
+    worksheetData.Item(1).Value = tabNameString
+    MsgBox ("New Worksheet Name:" & worksheetData.Item(1).Value)
+    
+End If
+
+
 
 End Sub
-
-
-Function browseLocation()
-
-
-    Dim objDialog As Object
-    Dim selectedPath As String
-    
-    ' Create a FolderBrowserDialog
-    Set objDialog = CreateObject("Shell.Application").BrowseForFolder(0, "Select folder to save occurrences", 0, 0)
-    
-    If Not objDialog Is Nothing Then
-        selectedPath = objDialog.Items().Item().Path
-        MsgBox "You selected: " & selectedPath
-        ' You can now use selectedPath to save your files
-        browseLocation = selectedPath
-        
-    Else
-        MsgBox "No folder selected."
-        browseLocation = ""
-        
-    End If
-    
-    
-End Function
 
 
 Function BrowseFile() As String
@@ -58,7 +57,7 @@ Function BrowseFile() As String
 
     With oDlg
         .DialogTitle = "Select a file"
-        .Filter = "Inventor Files (.ipt;.iam;.idw;.ipn;.dwg)|.ipt;.iam;.idw;.ipn;.dwg|All Files (.)|."
+        '.Filter = "Inventor Files (.ipt;.iam;.idw;.ipn;.dwg)|.ipt;.iam;.idw;.ipn;.dwg|All Files (.)|."
         .FilterIndex = 1
         .InitialDirectory = ThisApplication.DesignProjectManager.ActiveDesignProject.WorkspacePath
         .MultiSelectEnabled = False
