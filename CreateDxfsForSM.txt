@@ -1,0 +1,72 @@
+Sub Main ()
+
+' Crea los dxf para los flat patterns de cualquier leafoccurrence que sea un sheet metal.
+' Nota: Hace falta integrar el filtrador de replicas del occurrences name generator
+
+    Dim currentDoc As AssemblyDocument = ThisDoc.Document
+    Dim leafOccurrences As ComponentOccurrencesEnumerator = currentDoc.ComponentDefinition.Occurrences.AllLeafOccurrences
+
+	InventorVb.RunMacro("ApplicationProject", "ModFileBrowser", "BrowseLocationForDxf")
+
+    Dim dxfData As PropertySet = currentDoc.PropertySets.Item("dxf Export Data")
+	targetLocation = dxfData.Item("Location").Value
+	
+    'Input target location by copy and paste 
+    'targetLocation = InputBox("Copy and paste the path where you want the dxf files to be created","Location for dxf")
+	'targetLocation = targetLocation & "\"
+	
+    For Each compOccurrence As ComponentOccurrence In leafOccurrences
+        
+        ' Make sure it’s a part document
+        If TypeOf compOccurrence.Definition.Document Is PartDocument Then
+            
+            Dim occDoc As PartDocument = compOccurrence.Definition.Document
+            
+            ' Check for sheet metal
+            If occDoc.ComponentDefinition.Type = kSheetMetalComponentDefinitionObject Then
+                
+                Dim smCompDef As SheetMetalComponentDefinition = occDoc.ComponentDefinition
+                
+                ' Ensure flat pattern exists
+                If Not smCompDef.HasFlatPattern Then
+                    smCompDef.Unfold()
+                End If
+                
+                ' Get flat pattern
+                Dim flatPattern As FlatPattern = smCompDef.FlatPattern
+                
+				' Gets name for dxf file
+				Dim desiredDisplayName As String = setPathName(occDoc.DisplayName)
+				MsgBox(desiredDisplayName)
+				
+                ' Build file name
+                Dim fileName As String = System.IO.Path.Combine(targetLocation, desiredDisplayName & ".dxf") 'No veo la necesidad de usar ese método
+                MsgBox(fileName)
+				
+                ' Export to DXF
+                flatPattern.DataIO.WriteDataToFile("FLAT PATTERN DXF?AcadVersion=2018", fileName)
+                
+            End If
+        End If
+        
+    Next
+
+End Sub
+
+
+Function setPathName (displayName As String )
+' Eliminates the format from the displayName
+   stringToRemove = ".ipt"
+   countToRemove = Len(stringToRemove)
+   Dim limSup As Integer = Len(displayName) 
+   Dim limInf As Integer = limSup - countToRemove
+   Dim dirPath As String = displayName
+   
+  ' For i = limInf To limSup 
+       'dirPath = dirPath.Remove(i)
+   'Next
+   dirPath = dirPath.Remove(limInf)
+   Return dirPath
+   
+End Function
+
