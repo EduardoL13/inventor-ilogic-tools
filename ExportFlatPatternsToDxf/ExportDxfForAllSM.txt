@@ -5,7 +5,7 @@ Sub Main ()
 
     ' This macro browse lets you browse the location and add it as an invisible custom property.
 	' NOTE FOR THE USER: turn into comment the line below if you want to run the macro separately. 
-	InventorVb.RunMacro("ApplicationProject", "ModFileBrowser", "BrowseLocationForDxf")
+	InventorVb.RunMacro("ApplicationProject", "ModFileBrowser", "BrowseLocation")
 
     ' Access the property set created int the macro ran previously
     Dim dxfData As PropertySet = currentDoc.PropertySets.Item("dxf Export Data")
@@ -78,4 +78,5 @@ Function trimName (nameToTrim As String, noChar As Integer )
    Return trimmedString
    
 End Function
+
 
