@@ -4,7 +4,7 @@ Sub Main ()
     Dim leafOccurrences As ComponentOccurrencesEnumerator = currentDoc.ComponentDefinition.Occurrences.AllLeafOccurrences
 
     ' This macro browse lets you browse the location and add it as an invisible custom property.
-	' NOTE FOR THE USER: turn into comment the line below if you want to run the macro separately. 
+
     projectVba = "ApplicationProject" ' Project's name where the macro will be ran
     moduleVba = "ModFileBrowser" 'Module within the project that contains the macro
     macroVba = "BrowseLocation" 'Name of the macro to run
@@ -82,6 +82,7 @@ Function trimName (nameToTrim As String, noChar As Integer )
    Return trimmedString
    
 End Function
+
 
 
 
