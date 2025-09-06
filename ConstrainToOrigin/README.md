@@ -45,7 +45,7 @@ Tested in Autodesk Inventor 2025.
 
 ## 🎥 Demo
 ![Constrain To Origin Demo]()  
-*(Replace with the actual path to your GIF in the repo)*  
+ConstrainToOrigin/examples/OriginConstraint2.gif  
 
 ---
 
