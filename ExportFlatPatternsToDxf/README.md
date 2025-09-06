@@ -7,7 +7,7 @@ Instead of opening each part manually and exporting its flat pattern, you can ge
 
 ## 🚦 Status
 ✅ Finished – ready to use.  
-Tested in Autodesk Inventor 20XX.  
+Tested in Autodesk Inventor 2025.  
 
 ---
 
