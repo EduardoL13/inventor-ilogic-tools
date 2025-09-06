@@ -6,7 +6,7 @@ They provide utility functions (for example, browsing for a folder location) tha
 ---
 
 ## 🚦 Status
-✅ Finished – stable utility macros.  
+✅ Finished – stable utility macros. More to be added in the near future  
 Used across multiple iLogic rules in this repo.  
 
 ---
