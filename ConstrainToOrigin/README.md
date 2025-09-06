@@ -44,8 +44,8 @@ Tested in Autodesk Inventor 2025.
 ---
 
 ## 🎥 Demo
-![Constrain To Origin Demo]()  
-ConstrainToOrigin/examples/OriginConstraint2.gif  
+![Constrain To Origin Demo](ConstrainToOrigin/examples/OriginConstraint2.gif)  
+  
 
 ---
 
