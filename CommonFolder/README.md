@@ -33,7 +33,7 @@ Used across multiple iLogic rules in this repo.
 ---
 
 ## 🎥 Demo
-![DXF Export Demo](..)  
+![DXF Export Demo](examples/VBAEditorModulePaste.gif)  
  
 ---
 
