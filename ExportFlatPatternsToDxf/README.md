@@ -41,7 +41,7 @@ Tested in Autodesk Inventor 2025.
 
 ## 🎥 Demo
 ![DXF Export Demo](examples/ExportFlatPatternsToDxf.gif)  
-*(Replace with the actual path to your GIF in the repo)*  
+ 
 
 ---
 
