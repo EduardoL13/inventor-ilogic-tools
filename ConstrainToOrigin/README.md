@@ -34,9 +34,9 @@ Tested in Autodesk Inventor 2025.
 
 ### Option 2 – VBA Macro
 1. Open Autodesk Inventor.  
-2. Press `Alt + F11` to open the VBA editor.  
-3. Insert a new module into the project.  
-4. Copy-paste the contents of `ConstrainToOrigin.bas`.  
+2. Press `Alt + F11` to open the VBA editor or go to click VBA Editor in the tools tab above.  
+3. Insert a new module into a project.  
+4. Copy-paste the contents of `ConstrainToOrigin.bas` into the inserted module.  
 5. Save and close the VBA editor.  
 6. Open an assembly.  
 7. Run the macro → all component origin planes will be constrained to the assembly’s origin planes.  
