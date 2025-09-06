@@ -32,6 +32,11 @@ Used across multiple iLogic rules in this repo.
 
 ---
 
+## 🎥 Demo
+![DXF Export Demo](..)  
+ 
+---
+
 ## ⚠️ Notes
 - The macros in this folder are not meant to be run directly; they are helpers for other tools.  
 - If you move the macro to a different project/module, don’t forget to update the variables in any iLogic rule that depends on it.  
