@@ -13,7 +13,7 @@ Tested in Autodesk Inventor 2025.
 
 ## 📂 Files
 - `ExportFlatPatternsToDxf.vb` → iLogic rule.  
-- `BrowseFileLocation.bas` → VBA macro required by the rule (provides the folder selection dialog).  
+- `BrowseFileLocation.bas` → VBA macro required by the rule (provides the folder selection dialog). Available in CommonFolder
 
 ---
 
