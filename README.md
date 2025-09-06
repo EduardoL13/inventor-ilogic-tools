@@ -1,4 +1,4 @@
-# Autodesk Inventor Macros & iLogic Rules
+# Autodesk Inventor Automation – Macros & iLogic Rules
 
 This repository contains a collection of Autodesk Inventor automation tools (macros and iLogic rules) that I’ve created to save time and simplify repetitive modeling tasks.  
 
@@ -12,41 +12,43 @@ The goal is to provide tools that are:
 ## 📂 Repository Structure
 
 - **`main` branch** → only finished, tested, and documented tools.  
-  - Folder: `finished/`  
+- **`in-progress` branch** → includes experimental or unfinished tools.  
 
-- **`dev` branch** → includes experimental or in-progress tools.  
-  - Folders: `finished/` + `in-progress/`  
-
-This way, you can choose:
-- If you want **stable, reliable macros** → stick to `main`.  
-- If you’re curious about **what I’m currently working on** → check out `dev`.  
+👉 Use `main` if you want **stable, reliable macros**.  
+👉 Use `in-progress` if you’re curious about **what I’m currently developing**.  
 
 ---
 
 ## ✅ Finished Tools (in `main`)
 | Tool | Type | Description |
 |------|------|-------------|
-| `OriginConstraintRule.txt` | iLogic Rule | Automatically constrains the origin planes of all components in an assembly to the assembly’s origin planes. Useful for skeleton modeling workflows where grounding parts is not preferred. |
-| `AssemblyOriginCons.txt` | Macro | Automatically constrains the origin planes of all components in an assembly to the assembly’s origin planes. Useful for skeleton modeling workflows where grounding parts is not preferred. |
+| **CommonFolder** | Directory | Contains shared VBA macros that are required by some of the iLogic rules in this repository. They provide utility functions (e.g., browsing for a folder location). |
+| **ConstrainToOrigin** | Directory | Contains macro and iLogic versions of a routine to automatically constrain the origin planes of all component occurrences in an assembly to the origin planes of the assembly itself. |
+| **ExportFlatPatternsToDxf** | Directory | Contains an iLogic rule that automates the process of exporting all sheet metal parts in the active assembly as DXF files. Instead of opening each part manually and exporting its flat pattern, you can generate all DXFs in just one click. |
 
 ---
 
-## 🚧 In-Progress Tools (in `dev`)
-| Tool | Type | Status |
-|------|------|--------|
-| `AssignPropsFromExcel.txt` | iLogic Rule | 🚧 Early version of a rule to assign properties to occurrences of an assembly listed in a specified worksheet within an Excel File. |
-| `ExportKeyParams.txt` | iLogic Rule | 🚧 Early version of a rule to export parameters checked as key to a specified worksheet within an Excel file. |
-| `ImportKeyParams.txt` | iLogic Rule | 🚧 Early version of a rule to import parameters from specified worksheet within an Excel file. |
-| `SetSpreadsheetAndWS.txt` | Macro | 🚧 Early version of a macro that lets you browse the windows explorer to look for an Excel file and assign it´s path as an invisible property with a given name for a worksheet . |
-
+## 🚧 In-Progress Tools (in `in-progress`)
+| Tool | Type | Description |
+|------|------|-------------|
+| **ExcelIO** | Directory | This directory will be updated in the coming weeks with macros and iLogic rules for importing/exporting data (properties, annotations, key parameters, etc.) into a specified worksheet within an Excel file. |
 
 ---
 
 ## 🛠️ How to Use
-1. Download the file you need from the `finished/` folder in the `main` branch.  
-2. For **iLogic rules** → copy the `.txt` code into an iLogic rule inside Inventor.  
-3. For **Macros** → import the `.txt` file into the VBA editor in Inventor.  
-4. Run the tool and save time 🚀.  
+
+### For iLogic Rules
+1. Download the `.vb` file you need.  
+2. In Inventor, open the **iLogic browser** and create a new rule.  
+3. Copy-paste the contents of the file into the rule editor.  
+4. Save and run the rule.  
+
+### For Macros
+1. Download the `.bas` file you need.  
+2. In Inventor, press `Alt + F11` to open the VBA editor.  
+3. Insert a new module into the project.  
+4. Copy-paste or import the `.bas` file into the module.  
+5. Save and run the macro.  
 
 ---
 
@@ -57,8 +59,6 @@ This way, you can choose:
 ---
 
 ## 📬 Contact
-If you’d like to connect or discuss automation ideas, feel free to reach out via www.linkedin.com/in/eduardo-lopez-cobos or leave a message here.  
+If you’d like to connect or discuss automation ideas, feel free to reach out on [LinkedIn](https://www.linkedin.com/in/eduardo-lopez-cobos) or leave a message here.  
 
 ---
-
-
