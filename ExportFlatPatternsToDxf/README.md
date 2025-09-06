@@ -13,7 +13,7 @@ Tested in Autodesk Inventor 2025.
 
 ## 📂 Files
 - `ExportFlatPatternsToDxf.vb` → iLogic rule.  
-- `BrowseFileLocation.bas` → VBA macro required by the rule (provides the folder selection dialog). Available in CommonFolder
+- `BrowseFileLocation.bas` → VBA macro required by the rule (provides the folder selection dialog). Available in CommonFolder with demo for Setup & Usage step 1. shown below)
 
 ---
 
@@ -26,12 +26,12 @@ Tested in Autodesk Inventor 2025.
    - Save and close the VBA editor.  
 
 2. **Add the iLogic rule:**
+   - Open an assembly that contains sheet metal parts. 
    - In Inventor, open the **iLogic browser**.  
    - Create a new rule and paste the contents of `ExportFlatPatternsToDxf.vb`.  
    - ⚠️ In lines **8 and 9** of the rule, update the values of the variables `projectVba` and `moduleVba` to match the name of the VBA project and module where you pasted the `BrowseFileLocation` macro.  
 
-3. **Run the rule:**
-   - Open an assembly that contains sheet metal parts.  
+3. **Run the rule:** 
    - Run the iLogic rule.  
    - A folder dialog (powered by the VBA macro) will appear.  
    - Select the output folder.  
