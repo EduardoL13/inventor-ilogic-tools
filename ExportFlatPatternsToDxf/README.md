@@ -20,9 +20,9 @@ Tested in Autodesk Inventor 2025.
 ## 🛠️ Setup & Usage
 1. **Add the macro to Inventor VBA:**
    - Open Inventor.  
-   - Press `Alt + F11` to open the VBA editor.  
-   - Insert a new module into the project.  
-   - Copy-paste the contents of `BrowseFileLocation.bas` into that module.  
+   - Press `Alt + F11` to open the VBA editor or go and click VBA Editor in the Tools tab above.  
+   - Insert a new module into a project (ApplicationProject is a good option because it is available for every document) .  
+   - Copy-paste the contents of `BrowseFileLocation.bas` into the inserted module.
    - Save and close the VBA editor.  
 
 2. **Add the iLogic rule:**
