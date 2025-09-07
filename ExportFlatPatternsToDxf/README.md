@@ -65,9 +65,7 @@ Tested in Autodesk Inventor 2025.
 
 ## ⚠️ Notes
 - Non-sheet metal parts will be skipped automatically.  
-- If a part doesn’t have a flat pattern yet, Inventor will create it.  
-- The VBA macro **must** be installed before running the rule, and the variables `projectVba` and `moduleVba` must be set correctly.  
-
+- If a part doesn’t have a flat pattern yet, Inventor will create it.   
 ---
 
 ## 📬 Feedback
