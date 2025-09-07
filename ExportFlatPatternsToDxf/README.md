@@ -12,11 +12,29 @@ Tested in Autodesk Inventor 2025.
 ---
 
 ## 📂 Files
-- `ExportFlatPatternsToDxf.vb` → iLogic rule.  
+- `ExportFlatPatternsToDxf.vb` → iLogic rule + macro.
+- `ExportFlatPatternsToDxfDirect.vb` → iLogic rule
 - `BrowseFileLocation.bas` → VBA macro required by the rule (provides the folder selection dialog). This macro is available in CommonFolder with a demo that shows Setup & Usage step 1. described below
 
 ---
 
+`ExportFlatPatternsToDxfDirect.vb`
+## 🛠️ Setup & Usage
+
+1. **Add the iLogic rule:**
+   - Open an assembly that contains sheet metal parts. 
+   - In Inventor, open the **iLogic browser**.  
+   - Create a new rule and paste the contents of `ExportFlatPatternsToDxfDirect.vb`.   
+
+2. **Run the rule:** 
+   - Run the iLogic rule.  
+   - A folder dialog will appear.  
+   - Select the output folder.  
+   - All sheet metal flat patterns will be exported as DXF files into that folder. 
+
+---
+
+`ExportFlatPatternsToDxf.vb`
 ## 🛠️ Setup & Usage
 1. **Add the macro to Inventor VBA:**
    - Open Inventor.  
