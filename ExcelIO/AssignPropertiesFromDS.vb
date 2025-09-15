@@ -40,31 +40,42 @@ End Function
 Sub setPropertiesAndMat(assembComp As AssemblyDocument, file As String, tab As String, lastValue As Integer) 
 
 For Each compOcc As ComponentOccurrence In assembComp.ComponentDefinition.Occurrences.AllLeafOccurrences
+	
     If compOcc.Suppressed Then
 	
 	Else
-	    For rowCounter=2 To lastValue
-		Dim nameOccDS As String = GoExcel.CellValue(file, tab, "A" & rowCounter) 
-		'MsgBox(compOcc.Name)
 		
-		
-		'Make sure to put here below the corresponding column letter to the property you want to assign
-		colPartNo = "M" 'Part Number
-		colStockNumber = "N" 'Stock Number
-		colDescription = "D" 'Description
-		colMaterial = "E" 'Material 
-		
-		If compOcc.Name = nameOccDS Then
+		Dim occDoc As PartDocument = compOcc.Definition.Document
+		Dim listkeyStrings As New List(Of String)
 			
-		    ' Assign Properties (make sure that assigned column matches the desired property)
-        	iProperties.Expression(compOcc.Name, "Project", "Part Number") = GoExcel.CellValue(file, tab, colPartNo & rowCounter)
-			iProperties.Expression(compOcc.Name, "Project", "Stock Number") = GoExcel.CellValue(file, tab, colStockNumber & rowCounter)
-	    	iProperties.Expression(compOcc.Name, "Project", "Description") = GoExcel.CellValue(file, tab, colDescription & rowCounter)
-	    	iProperties.MaterialOfComponent(compOcc.Name) = GoExcel.CellValue(file, tab, colMaterial & rowCounter) ' 
+		nameToCheck = compOcc.Name.Substring(0, compOcc.Name.LastIndexOf(":"))
+		If listkeyStrings.Contains(nameToCheck) Then
+		
+		Else
+			listkeyStrings.Add(nameToCheck)
+	        For rowCounter=2 To lastValue
+		    	Dim nameOccDS As String = GoExcel.CellValue(file, tab, "A" & rowCounter) 
+
+		    	'Make sure to put here below the corresponding column letter to the property you want to assign
+		
+		   	    colPartNo = "M" 'Part Number
+		   	 	colStockNumber = "N" 'Stock Number
+		    	colDescription = "D" 'Description
+		    	colMaterial = "E" 'Material 
+		
+		    	If occDoc.DisplayName = nameOccDS & ".ipt" Then
+			
+		    		' Assign Properties (make sure that assigned column matches the desired property)
+        	    	iProperties.Expression(compOcc.Name, "Project", "Part Number") = GoExcel.CellValue(file, tab, colPartNo & rowCounter)
+					iProperties.Expression(compOcc.Name, "Project", "Stock Number") = GoExcel.CellValue(file, tab, colStockNumber & rowCounter)
+	    			iProperties.Expression(compOcc.Name, "Project", "Description") = GoExcel.CellValue(file, tab, colDescription & rowCounter)
+	    			iProperties.MaterialOfComponent(compOcc.Name) = GoExcel.CellValue(file, tab, colMaterial & rowCounter) ' 
+			
+				End If
+	        Next			
 			
 		End If
-	Next
 	End If
-	Next
+Next
 
 End Sub
