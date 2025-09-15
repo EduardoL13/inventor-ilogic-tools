@@ -1,48 +1,85 @@
 Sub SetupSpreadsheet()
 
-Dim currentDoc As Object
-Set currentDoc = ThisApplication.ActiveDocument
+    Dim currentDoc As Object
+    Set currentDoc = ThisApplication.ActiveDocument
 
-Dim DSData As PropertySet
+    Dim SSData As PropertySet
 
-' Set Spreadsheet Document
-If currentDoc.PropertySets.PropertySetExists("Spreadsheet Document") = False Then
+    ' Set Spreadsheet Document -----------------------------------------------------
 
-    Set SSData = currentDoc.PropertySets.Add("Spreadsheet Document")
+    ' Browse Spreadsheet File
     docNameString = BrowseFile()
     
-    Dim propDocName As Property
-    Set propDocName = SSData.Add(docNameString, "File Name")
+    ' Cancels if user cancel in the dialogbox
+    If docNameString = "" Then
+        Exit Sub
+    End If
+
+' Conditional to see if property already exists
+    If currentDoc.PropertySets.PropertySetExists("Spreadsheet Document") = False Then
     
-    MsgBox ("File Name:" & propDocName.Value & " has been added")
+        ' Adds Spreadsheet File Data
+        Set SSData = currentDoc.PropertySets.Add("Spreadsheet Document")
+
     
-Else
-    Set SSData = currentDoc.PropertySets.Item("Spreadsheet Document")
-    docNameString = BrowseFile()
-    SSData.Item("File Name").Value = docNameString
-    MsgBox ("New File Name:" & SSData.Item("File Name").Value)
+        ' Creates and adds Property
+        Dim propDocName As Property
+        Set propDocName = SSData.Add(docNameString, "File Name")
+     
+
+        MsgBox ("File Name:" & propDocName.Value & " has been added")
+  
+    ' Set the property given that it already exists
+    Else
+    
+        'Declares and updates Spreadsheet Worksheet Data
+        Set SSData = currentDoc.PropertySets.Item("Spreadsheet Document")
+
+    
+        ' Updates Property
+        SSData.Item("File Name").Value = docNameString
+        MsgBox ("New File Name:" & SSData.Item("File Name").Value)
+    
+    End If
+
+' Set worksheet --------------------------------------------------------------------
+
+    Dim worksheetData As PropertySet
+
+    ' Assign name of worksheet to access within the spreadsheet
+    tabNameString = InputBox("Enter worksheet tab name")
+
+    ' Cancels if user cancel in the dialogbox
+    If tabNameString = "" Then
+        Exit Sub
+    End If
+
+
+    If currentDoc.PropertySets.PropertySetExists("Worksheet Data") = False Then
+
+        ' Adds Spreadsheet Worksheet Data
+        Set worksheetData = currentDoc.PropertySets.Add("Worksheet Data")
+
+    
+        ' Creates Property
+        Dim propTabName As Property
+        Set propTabName = worksheetData.Add(tabNameString, "Worksheet Name")
+        
+    
+        MsgBox ("Worksheet Name:" & propTabName.Value & " has been added")
+    
+    Else
+         
+        'Declares worksheet Data Property set
+        Set worksheetData = currentDoc.PropertySets.Item("Worksheet Data")
+
+        ' Updates Property
+        worksheetData.Item("Worksheet Name").Value = tabNameString
+        MsgBox ("New Worksheet Name:" & worksheetData.Item("Worksheet Name").Value)
     
 End If
 
-' Set worksheet
 
-If currentDoc.PropertySets.PropertySetExists("Worksheet Data") = False Then
-
-    Set worksheetData = currentDoc.PropertySets.Add("Worksheet Data")
-    tabNameString = InputBox("Enter worksheet tab name")
-    
-    Dim propTabName As Property
-    Set propTabName = worksheetData.Add(tabNameString, "Worksheet Name")
-    
-    MsgBox ("Worksheet Name:" & propTabName.Value & " has been added")
-    
-Else
-    Set worksheetData = currentDoc.PropertySets.Item("Worksheet Data")
-    tabNameString = InputBox("Enter worksheet tab name")
-    worksheetData.Item("Worksheet Name").Value = tabNameString
-    MsgBox ("New Worksheet Name:" & worksheetData.Item("Worksheet Name").Value)
-    
-End If
 
 End Sub
 
