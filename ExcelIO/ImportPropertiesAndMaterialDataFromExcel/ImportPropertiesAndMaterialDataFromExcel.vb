@@ -43,7 +43,7 @@ Sub setPropertiesAndMat(assembComp As AssemblyDocument, file As String, tab As S
 
     For Each compOcc As ComponentOccurrence In assembComp.ComponentDefinition.Occurrences.AllLeafOccurrences
 		
-	    If compOcc.Suppressed Or TypeOf compOcc.Definition.Document IsNot PartDocument Then 
+	    If compOcc.Suppressed Or TypeOf compOcc.Definition.Document IsNot PartDocument Or compOcc.BOMStructure.Equals(kNormalBOMStructure) <> True Then
 	        'MsgBox(compOcc.Name)
 	    Else	
 		    Dim occDoc As PartDocument = compOcc.Definition.Document ' Acceso al part document de la instancia
