@@ -39,7 +39,7 @@ Next
 End sub
 
 
-' ASSEMBLY PROP ASSIGNER IN PROGRESS
+' ASSEMBLY PROP ASSIGNER IN PROGRESS: La idea es que los LO se listen en en el excel y que exista una columna adicional donde se agreguen los MS de la forma " (modelStateName)"
 
 Sub Main ()
 
