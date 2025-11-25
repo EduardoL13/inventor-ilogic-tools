@@ -81,7 +81,7 @@ Sub setPropertiesAndMat(assembComp As AssemblyDocument, file As String, tab As S
 				
 			        'If compOcc.Name = nameOccDS Then
                  	 If nameToCompare = nameOccDS Then 
-				         MsgBox(nameToCompare)
+				         'MsgBox(nameToCompare)
                     	 propsAssigner(nameToCompare & ".ipt", file, tab, rowCounter, colPartNo, colStockNumber, colDescription, colMaterial)    'compOcc.Name
 					
 	                	 If oFactoryDoc IsNot Nothing Then
