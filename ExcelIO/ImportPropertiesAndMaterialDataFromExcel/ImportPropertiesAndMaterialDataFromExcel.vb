@@ -38,12 +38,13 @@ Sub setPropertiesAndMat(assembComp As AssemblyDocument, file As String, tab As S
     colStockNumber = "N" 'Stock Number
     colDescription = "D" 'Description
 	colMaterial = "E" 'Material 
+	colPartID = "O" 'Part ID
 	
 	Dim listkeyStrings As New List(Of String)
 
     For Each compOcc As ComponentOccurrence In assembComp.ComponentDefinition.Occurrences.AllLeafOccurrences
 		
-	    If compOcc.Suppressed Or TypeOf compOcc.Definition.Document IsNot PartDocument Or compOcc.BOMStructure.Equals(kNormalBOMStructure) <> True Then
+	    If compOcc.Suppressed Or TypeOf compOcc.Definition.Document IsNot PartDocument Or compOcc.BOMStructure.Equals(kNormalBOMStructure) <> True Then 
 	        'MsgBox(compOcc.Name)
 	    Else	
 		    Dim occDoc As PartDocument = compOcc.Definition.Document ' Acceso al part document de la instancia
@@ -74,7 +75,15 @@ Sub setPropertiesAndMat(assembComp As AssemblyDocument, file As String, tab As S
 					         oFactoryDoc.ComponentDefinition.ModelStates.MemberEditScope = MemberEditScopeEnum.kEditAllMembers
 				    	 End If
 				    	 occDoc = oFactoryDoc
-					 End If				
+					 End If			
+					 
+					 If occDoc.PropertySets.PropertySetExists("Database Properties") Then
+						 
+					 Else
+						 occDoc.PropertySets.Add("Database Properties")
+						 occDoc.PropertySets("Database Properties").Add("Part ID")
+					 End If
+					 
 				
 					'nameToCompare = occDoc.DisplayName.Substring(0, occDoc.DisplayName.LastIndexOf("."))
 				
@@ -82,7 +91,7 @@ Sub setPropertiesAndMat(assembComp As AssemblyDocument, file As String, tab As S
 			        'If compOcc.Name = nameOccDS Then
                  	 If nameToCompare = nameOccDS Then 
 				         'MsgBox(nameToCompare)
-                    	 propsAssigner(nameToCompare & ".ipt", file, tab, rowCounter, colPartNo, colStockNumber, colDescription, colMaterial)    'compOcc.Name
+                    	 propsAssigner(nameToCompare & ".ipt", file, tab, rowCounter, colPartNo, colStockNumber, colDescription, colMaterial, colPartID)    'compOcc.Name
 					
 	                	 If oFactoryDoc IsNot Nothing Then
 						     oFactoryDoc.ComponentDefinition.ModelStates.MemberEditScope = oCurrentScope
@@ -96,11 +105,14 @@ Sub setPropertiesAndMat(assembComp As AssemblyDocument, file As String, tab As S
     			
 End Sub
 
-Sub propsAssigner(compName As String, doc As String, tab As String, row As Integer, partNo As String, stockNumber As String, description As String, material As String)
+Sub propsAssigner(compName As String, doc As String, tab As String, row As Integer, partNo As String, stockNumber As String, description As String, material As String, partID As String)
 	
     iProperties.Expression(compName, "Project", "Part Number") = GoExcel.CellValue(doc, tab, partNo & row)
 	iProperties.Expression(compName, "Project", "Stock Number") = GoExcel.CellValue(doc, tab, stockNumber & row)
 	iProperties.Expression(compName, "Project", "Description") = GoExcel.CellValue(doc, tab, description & row)
 	iProperties.Material(compName) = GoExcel.CellValue(doc, tab, material & row)
+	
+	iProperties.Expression(compName,"Custom","Part ID") = GoExcel.CellValue(doc, tab, partID & row)
+	
 	
 End Sub
