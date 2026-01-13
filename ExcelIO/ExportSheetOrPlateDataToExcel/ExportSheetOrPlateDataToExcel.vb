@@ -1,4 +1,4 @@
-ub Main ()
+Sub Main ()
 'NOTA: Las dimensiones de los valores está dados en cm por defecto
 Dim esteDoc As AssemblyDocument = ThisDoc.Document
 Dim count As Integer = 0
