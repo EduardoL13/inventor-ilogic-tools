@@ -52,7 +52,7 @@ Sub Main ()
                     Dim flatPattern As FlatPattern = smCompDef.FlatPattern
                
 	            ' Gets name for dxf file
-			        Dim desiredDisplayName As String = occDoc.DisplayName.Substring(0, occDoc.DisplayName.LastIndexOf(".")) 'removes ".ipt"
+			        Dim desiredDisplayName As String =occDoc.PropertySets.Item("Design Tracking Properties").Item("Stock Number").Value 'Dim desiredDiisplayName.Substring(0, occDoc.DisplayName.LastIndexOf(".")) 'removes ".ipt"
 			    'MsgBox(desiredDisplayName)
 				
                 ' Creates file name
