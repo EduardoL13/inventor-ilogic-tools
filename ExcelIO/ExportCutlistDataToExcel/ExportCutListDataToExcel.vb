@@ -8,6 +8,10 @@ Dim leafOccurrences As ComponentOccurrencesEnumerator = esteDoc.ComponentDefinit
 Dim file As String = esteDoc.PropertySets.Item("Spreadsheet Document").Item("File Name").Value
 Dim tab As String = InputBox("Enter the excel worksheet name", "Worksheet to Export")
 
+If tab = ""
+	Exit Sub
+End If	
+
 Dim ConvFactor As Double = 1/2.54 'Factor de conversión de cm a in
 Dim rowCounter = 6
 
@@ -21,40 +25,42 @@ partDescriptionColumn = "E"
 Dim listkeyStrings As New List(Of String)
 
 For Each compOccurrence As ComponentOccurrence In leafOccurrences
-	Dim occDoc As PartDocument = compOccurrence.Definition.Document
 	
 	
 	
-
-	
-	If compOccurrence.BOMStructure.Equals(kNormalBOMStructure) <> True Or TypeOf compOccurrence.Definition.Document IsNot PartDocument Or compOccurrence.Suppressed Then
-	
+	If compOccurrence.Suppressed Then
+		
 	Else
-		
-		nameToCompare = occDoc.DisplayName.Substring(0, occDoc.DisplayName.LastIndexOf("."))
-		'MsgBox(nameToCompare)
-    	nameToPrint = occDoc.PropertySets.Item("Design Tracking Properties").Item("Stock Number").Value ' que muestre el part ID
-		
-		
-		
-	    If listkeyStrings.Contains(nameToCompare) Then
-				
+
+		If compOccurrence.BOMStructure.Equals(kNormalBOMStructure) <> True Or TypeOf compOccurrence.Definition.Document IsNot PartDocument Then
+	
 		Else
-		    'MsgBox(nameToCompare)
-			listkeyStrings.Add(nameToCompare)
-
-
-
-	    	If occDoc.ComponentDefinition.Type.ToString = "kSheetMetalComponentDefinitionObject" Then
+			Dim occDoc As PartDocument = compOccurrence.Definition.Document
+			nameToCompare = occDoc.DisplayName.Substring(0, occDoc.DisplayName.LastIndexOf("."))
+			'MsgBox(nameToCompare)
+    		nameToPrint = occDoc.PropertySets.Item("Design Tracking Properties").Item("Stock Number").Value ' que muestre el part ID
+		
+		
+		
+	    	If listkeyStrings.Contains(nameToCompare) Then
 				
 			Else
-					
-			    Dim partModDims As ModelDimensions = occDoc.ComponentDefinition.ModelAnnotations.ModelDimensions
-				
-                propsPrinter(occDoc, file, tab, partIDColumn, partQtyColumn, partDescriptionColumn, partLengthColumn, rowStart, rowCounter)
-				
-          	    rowCounter = rowCounter + 1						
+		    	'MsgBox(nameToCompare)
+				listkeyStrings.Add(nameToCompare)
 
+
+
+	    		If occDoc.ComponentDefinition.Type.ToString = "kSheetMetalComponentDefinitionObject" Then
+				
+				Else
+					
+			    	Dim partModDims As ModelDimensions = occDoc.ComponentDefinition.ModelAnnotations.ModelDimensions
+				
+                	propsPrinter(occDoc, file, tab, partIDColumn, partQtyColumn, partDescriptionColumn, partLengthColumn, rowStart, rowCounter)
+				
+          	    	rowCounter = rowCounter + 1						
+
+				End If
 			End If
 		End If
 	End If
