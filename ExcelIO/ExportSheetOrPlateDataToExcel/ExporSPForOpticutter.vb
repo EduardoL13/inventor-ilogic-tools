@@ -9,7 +9,8 @@ Dim file As String = esteDoc.PropertySets.Item("Spreadsheet Document").Item("Fil
 Dim tab As String = InputBox("Enter the excel worksheet name", "Worksheet to Export")
 
 Dim ConvFactor As Double = 1/2.54 'Factor de conversión de cm a in
-Dim rowCounter = 8
+startRow = 8
+rowCounter = startRow
 
 partIDColumn = "F" 'Excel Column with PartID
 partLengthColumn = "B" 'Dimension or property 
@@ -53,30 +54,9 @@ For Each compOccurrence As ComponentOccurrence In leafOccurrences
 		    	If occDoc.ComponentDefinition.HasFlatPattern Then
 					
 					Dim partModDims As ModelDimensions = occDoc.ComponentDefinition.FlatPattern.ModelAnnotations.ModelDimensions
-				    If rowCounter = 8 Then
-	        			GoExcel.CellValue(file, tab, partIDColumn & rowCounter) = nameToPrint 'confirmar esto
-						GoExcel.CellValue(partQtyColumn & rowCounter) = Single.Parse(occDoc.PropertySets.Item("Design Tracking Properties").Item("Cost Center").Value) 'Total qty
-		
-						GoExcel.CellValue(partMaterialColumn & rowCounter) = occDoc.PropertySets.Item("Design Tracking Properties").Item("Material").Value
-'						GoExcel.CellValue(partThkColumn & rowCounter) = occDoc.ComponentDefinition.Parameters.ModelParameters("Thickness").Value*ConvFactor
-						GoExcel.CellValue(partThkColumn & rowCounter) = partModDims.Item("thk").ModelValue * ConvFactor
-						
-						GoExcel.CellValue(partLengthColumn & rowCounter) = partModDims.Item("length").ModelValue * ConvFactor
-						GoExcel.CellValue(partHeightColumn & rowCounter) = partModDims.Item("Height").ModelValue * ConvFactor
-						
-						
-					Else
-	        			GoExcel.CellValue(file, tab, partIDColumn & rowCounter) = nameToPrint 'confirmar esto
-						GoExcel.CellValue(partQtyColumn & rowCounter) = Single.Parse(occDoc.PropertySets.Item("Design Tracking Properties").Item("Cost Center").Value) 'Total qty
-		
-						GoExcel.CellValue(partMaterialColumn & rowCounter) = occDoc.PropertySets.Item("Design Tracking Properties").Item("Material").Value
-'						GoExcel.CellValue(partThkColumn & rowCounter) = occDoc.ComponentDefinition.Parameters.ModelParameters("Thickness").Value*ConvFactor
-						GoExcel.CellValue(partThkColumn & rowCounter) = partModDims.Item("thk").ModelValue * ConvFactor
-						
-						GoExcel.CellValue(partLengthColumn & rowCounter) = partModDims.Item("length").ModelValue * ConvFactor
-						GoExcel.CellValue(partHeightColumn & rowCounter) = partModDims.Item("height").ModelValue * ConvFactor 
-						
-			        End If
+
+					 propsPrinter(occDoc, file, tab, partIDColumn, partQtyColumn, partDescriptionColumn, partLengthColumn, partHeightColumn, partThkColumn, partMaterialColumn, startRow, rowCounter)
+					
           	        rowCounter = rowCounter + 1						
 				End If
 			End If
@@ -85,4 +65,28 @@ For Each compOccurrence As ComponentOccurrence In leafOccurrences
 Next
 GoExcel.Save
 MsgBox("Export Done")
+End Sub
+
+Sub propsPrinter(currentPart As PartDocument, file As String, tab As String, partIDColumn As String, partQtyColumn As String, partDescriptionColumn As String, partLengthColumn As String, partHeightColumn As String, partThkColumn As String, partMaterialColumn As String, startRow As Integer, currentRow As Integer)
+    Dim ConvFactor As Double = 1 / 2.54 'Factor de conversión de cm a in
+'    If currentRow = startRow Then
+
+		Try
+			
+			
+	        GoExcel.CellValue(file, tab, partIDColumn & currentRow) = currentPart.PropertySets.Item("Design Tracking Properties").Item("Stock Number").Value  'confirmar esto
+			GoExcel.CellValue(partQtyColumn & currentRow) = Single.Parse(currentPart.PropertySets.Item("Design Tracking Properties").Item("Cost Center").Value) 'Total qty
+			GoExcel.CellValue(partLengthColumn & currentRow) = currentPart.ComponentDefinition.FlatPattern.ModelAnnotations.ModelDimensions.Item("length").ModelValue * ConvFactor
+			GoExcel.CellValue(partHeightColumn & currentRow) = currentPart.ComponentDefinition.FlatPattern.ModelAnnotations.ModelDimensions.Item("height").ModelValue * ConvFactor			
+			GoExcel.CellValue(partThkColumn & currentRow) = currentPart.ComponentDefinition.FlatPattern.ModelAnnotations.ModelDimensions.Item("thk").ModelValue * ConvFactor	
+			
+			GoExcel.CellValue(partMaterialColumn & currentRow) = currentPart.PropertySets.Item("Design Tracking Properties").Item("Material").Value				
+
+		Catch :
+
+			MsgBox(currentPart.DisplayName & " has missing properties or properties that are not in the valid format")
+		    'GoTo ExitHere 
+		
+		End Try
+
 End Sub
