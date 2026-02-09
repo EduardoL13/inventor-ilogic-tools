@@ -17,7 +17,8 @@ Catch:
 
 	MsgBox("Communications with Data Hub are not set. Please try again after setting them")
 	Exit Sub
-
+End Try
+			
 Dim numOccs As Integer = leafOccurrences.Count ' 
 'Dim listOccsNames(numOccs) As String  ' Definición de la variable que se le va a asignar al multiparameter list
 
