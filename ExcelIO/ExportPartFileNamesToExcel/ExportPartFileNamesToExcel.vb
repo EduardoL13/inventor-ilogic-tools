@@ -45,5 +45,6 @@ For Each name As String In listOccsNames
 Next
 
 GoExcel.Save
+MsgBox("Done")
 
 End Sub
