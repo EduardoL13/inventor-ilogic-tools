@@ -2,14 +2,6 @@ Sub Main ()
 
 Dim currentDoc As AssemblyDocument = ThisDoc.Document
 
-Dim sFile As String
-Dim tabDS As String
-
-'sFile = currentDoc.PropertySets.Item("Spreadsheet Document").Item("File Name").Value
-'tabDS = currentDoc.PropertySets.Item("Worksheet Data").Item("Worksheet Name").Value	
-	
-
-'setQty(currentDoc, sFile, tabDS)
 
 prodQty = InputBox("Enter the desired total qty of products", "TOTAL QTY") ' Multiplicador según el número de productos requerido
 
