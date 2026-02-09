@@ -4,6 +4,20 @@ Dim currentDoc As AssemblyDocument = ThisDoc.Document
 Dim count As Integer = 0
 Dim leafOccurrences As ComponentOccurrencesEnumerator = currentDoc.ComponentDefinition.Occurrences.AllLeafOccurrences
 
+
+Dim sFile As String
+Dim tabDS As String
+
+Try
+		
+    sFile = currentDoc.PropertySets.Item("Spreadsheet Document").Item("File Name").Value
+	tabDS = currentDoc.PropertySets.Item("Worksheet Data").Item("Worksheet Name").Value	
+
+Catch:
+
+	MsgBox("Communications with Data Hub are not set. Please try again after setting them")
+	Exit Sub
+
 Dim numOccs As Integer = leafOccurrences.Count ' 
 'Dim listOccsNames(numOccs) As String  ' Definición de la variable que se le va a asignar al multiparameter list
 
@@ -25,11 +39,7 @@ For Each compOccurrence As ComponentOccurrence In leafOccurrences
 	End If
 Next
 
-Dim sFile As String
-Dim tabDS As String
 
-sFile = currentDoc.PropertySets.Item("Spreadsheet Document").Item("File Name").Value
-tabDS = currentDoc.PropertySets.Item("Worksheet Data").Item("Worksheet Name").Value	
 
 Dim file As String = sFile
 Dim tab As String = tabDS
