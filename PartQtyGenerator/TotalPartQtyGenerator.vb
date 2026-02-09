@@ -65,7 +65,7 @@ Sub setQty(assembComp As AssemblyDocument,pQty As Double) ', file As String, tab
 				
 				
 		    	Else
-		        	MsgBox(nameToCompare)
+		        	'MsgBox(nameToCompare)
 			     	listkeyStrings.Add(nameToCompare)
 							
 				
