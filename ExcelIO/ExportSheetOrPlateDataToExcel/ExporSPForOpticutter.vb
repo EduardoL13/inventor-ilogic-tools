@@ -3,9 +3,17 @@ Sub Main ()
 Dim esteDoc As AssemblyDocument = ThisDoc.Document
 Dim count As Integer = 0
 Dim leafOccurrences As ComponentOccurrencesEnumerator = esteDoc.ComponentDefinition.Occurrences.AllLeafOccurrences
+Dim file As String
 
+Try
+		
+    file = esteDoc.PropertySets.Item("Spreadsheet Document").Item("File Name").Value
 
-Dim file As String = esteDoc.PropertySets.Item("Spreadsheet Document").Item("File Name").Value
+Catch:
+
+	MsgBox("No target spreadsheet found. Please add one and try again")
+	Exit Sub
+
 Dim tab As String = InputBox("Enter the excel worksheet name", "Worksheet to Export")
 
 If tab = ""
