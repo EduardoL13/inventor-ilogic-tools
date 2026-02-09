@@ -1,4 +1,4 @@
-Sub SetupSpreadsheetData()
+Sub SetupDataHub()
 
     Dim currentDoc As Object
     Set currentDoc = ThisApplication.ActiveDocument
@@ -106,5 +106,6 @@ Function BrowseFile() As String
 
     BrowseFile = oDlg.FileName ' full path of the chosen file
 End Function
+
 
 
