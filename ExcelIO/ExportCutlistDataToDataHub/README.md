@@ -102,9 +102,7 @@ Typical automation chain:
 1. `SetupDataHub`
 2. `ExportPartFileNamesToDataHub`
 3. `ExportCutlistDataToDataHub`
-4. `ExportSheetDimsToDataHub`
-5. `TotalPartQtyGenerator`
-
+4. 
 This script plays a central role in generating fabrication-ready datasets.
 
 ---
