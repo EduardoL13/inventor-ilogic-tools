@@ -100,9 +100,9 @@ The resulting worksheet becomes a centralized fabrication dataset for the entire
 Typical automation chain:
 
 1. `SetupDataHub`
-2. `ExportPartFileNamesToDataHub`
+2. `Type the name of the target worksheet for the data`
 3. `ExportCutlistDataToDataHub`
-4. 
+
 This script plays a central role in generating fabrication-ready datasets.
 
 ---
