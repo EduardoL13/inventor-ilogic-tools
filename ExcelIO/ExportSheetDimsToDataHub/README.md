@@ -104,10 +104,9 @@ The resulting worksheet contains structured sheet dimension data for the entire 
 Typical automation sequence:
 
 1. `SetupDataHub`
-2. `ExportPartFileNamesToDataHub`
-3. `ExportCutlistDataToDataHub`
-4. `ExportSheetDimsToDataHub`
-5. `TotalPartQtyGenerator`
+2. `Type the name of the target worksheet for the data`
+3. `ExportSheetDimsToDataHub`
+
 
 This script enriches the Data Hub with dimensional fabrication data required for downstream processes.
 
