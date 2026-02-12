@@ -1,53 +1,73 @@
 # 🔢 TotalPartQtyGenerator  
-### Autodesk Inventor – iLogic Quantity Aggregation Rule
+### Autodesk Inventor – iLogic Production Quantity Multiplier Rule
 
 ## 📌 Overview
 
-`TotalPartQtyGenerator` is an iLogic rule that calculates and aggregates the total quantity of each unique part within a top-level assembly and exports the results to the configured Data Hub worksheet.
+`TotalPartQtyGenerator` is an iLogic rule designed to calculate the total required quantity of parts for production based on a user-defined number of finished products.
 
-Instead of manually reviewing assembly structures or relying on static BOM exports, this rule programmatically traverses the assembly tree and generates a structured quantity summary for downstream reporting and fabrication planning.
+When executed from the top-level assembly, the rule prompts the user to enter the desired number of units to fabricate. It then:
 
-This script is typically executed after part names and dimensional data have already been exported to the Data Hub.
+- Counts all part components within the assembly
+- Multiplies their occurrence count by the user-defined production quantity
+- Stores the resulting total quantity in a structured property/variable
+
+This calculated quantity can then be accessed by downstream automation scripts such as:
+
+- `ExportCutlistDataToDataHub`
+- `ExportSheetDimsToDataHub`
+- Other fabrication or reporting rules
+
+This script acts as a **quantity multiplier and data propagation mechanism** within the automation workflow.
 
 ---
 
 ## 🚦 Status
 
 ✅ Functional – Ready for Use  
-✔ Designed for structured assembly environments  
-✔ Requires Data Hub initialization  
+✔ Designed for production batch workflows  
+✔ Must be executed from the top-level assembly  
 
 ---
 
 ## 🎯 Purpose
 
-This script automates the calculation of:
+The primary objective of this rule is to:
 
-- Total quantity of each unique part
-- Aggregated counts across nested subassemblies
-- Structured quantity output into a Data Hub worksheet
+- Allow the user to define how many finished products will be fabricated
+- Automatically calculate total part requirements
+- Store the computed quantities in a reusable format
+- Enable other automation rules to retrieve consistent production-level quantities
 
-It is particularly useful for:
-
-- Procurement preparation
-- Fabrication batching
-- Material estimation
-- Production planning
-- BOM validation
+This ensures fabrication data reflects real production volume rather than single-unit assembly counts.
 
 ---
 
-## ⚠️ Prerequisites
+## 🛠️ How It Works
 
-Before running this rule:
+1. The user opens the top-level assembly.
+2. The rule is executed from the iLogic browser.
+3. A text input dialog appears requesting:
+   - Desired number of finished products to fabricate.
+4. The script:
+   - Traverses the assembly structure
+   - Identifies all leaf-level Part components (excluding subassemblies)
+   - Calculates their occurrence count
+   - Multiplies each count by the user-defined production quantity
+5. The resulting total quantities are stored in a variable or document property that can be accessed by other scripts.
 
-1. The document must be connected to a Data Hub via:
-   - `SetupDataHub`
-2. The rule must be executed from the top-level assembly
-3. The target worksheet must exist
-4. Assembly structure must be valid and fully resolved
+---
 
-If the Data Hub has not been initialized, the rule will not function correctly.
+## 🧠 Core Logic
+
+The rule performs:
+
+- User input handling
+- Assembly tree traversal
+- Leaf component filtering (Parts only)
+- Quantity multiplication
+- Centralized quantity storage for reuse
+
+It does **not** currently calculate subassembly-level production quantities.
 
 ---
 
@@ -60,52 +80,21 @@ If the Data Hub has not been initialized, the rule will not function correctly.
 
 ---
 
-## 🛠️ How It Works
-
-1. The user opens the top-level assembly.
-2. The rule is executed from the iLogic browser.
-3. The script:
-   - Reads the Data Hub file path and worksheet reference from document properties
-   - Traverses the full assembly structure
-   - Identifies all leaf components (Parts)
-   - Groups identical parts
-   - Calculates total occurrences across all levels
-   - Writes aggregated quantity data into the designated worksheet
-
-The resulting worksheet contains a clean, structured quantity summary per unique part.
-
----
-
-## 🧠 Aggregation Logic
-
-The rule performs:
-
-- Assembly tree traversal
-- Leaf-level filtering
-- Unique part identification
-- Quantity accumulation
-- Structured output formatting
-
-This ensures accurate total counts even in deeply nested assembly structures.
-
----
-
 ## 🔗 Dependencies
 
 - Autodesk Inventor
 - iLogic enabled
-- Previously configured Data Hub
-- Microsoft Excel (if using Excel as Data Hub)
-- Fully resolved assembly structure
+- Valid and fully resolved assembly structure
+- Downstream scripts that reference the stored quantity variable/property
 
 ---
 
 ## 📌 Requirements
 
 - Must run from the top-level assembly
-- Data Hub must be initialized
-- Worksheet must be accessible
-- Suppressed or unresolved components may affect totals
+- User must provide a valid numeric input
+- Assembly structure must be fully loaded and resolved
+- Leaf components must be properly defined as Parts
 
 ---
 
@@ -114,33 +103,32 @@ This ensures accurate total counts even in deeply nested assembly structures.
 Typical automation sequence:
 
 1. `SetupDataHub`
-2. `ExportPartFileNamesToDataHub`
+2. `TotalPartQtyGenerator`
 3. `ExportCutlistDataToDataHub`
 4. `ExportSheetDimsToDataHub`
-5. `TotalPartQtyGenerator`
 
-This rule finalizes the dataset by adding structured quantity intelligence to the Data Hub.
+This ensures all exported fabrication data reflects the correct production batch size.
 
 ---
 
 ## 💡 Why This Matters
 
-Manually calculating part quantities in large assemblies can be:
+Without this rule:
 
-- Time-consuming
-- Error-prone
-- Difficult to validate
-- Inconsistent across revisions
+- Exported cutlists would reflect single-unit assembly quantities
+- Fabrication data would require manual scaling
+- Risk of procurement errors increases
+- Production documentation becomes inconsistent
 
-This rule ensures:
+With `TotalPartQtyGenerator`:
 
-- Accurate quantity aggregation
-- Reliable procurement data
-- Scalable assembly reporting
-- Standardized production documentation
+- Production scaling is automated
+- Fabrication datasets are batch-aware
+- Downstream scripts operate with consistent quantity logic
+- Engineering time spent on manual recalculation is eliminated
 
 ---
 
 ## 🎥 Demo
 
-_Add demo here (GIF showing quantity aggregation and worksheet update)._
+_Add demo here (GIF showing quantity input dialog and resulting updated quantities being used by downstream scripts).
