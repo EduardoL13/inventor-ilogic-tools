@@ -1,4 +1,4 @@
-Sub Main ()
+	Sub Main ()
 
 Dim currentDoc As AssemblyDocument = ThisDoc.Document
 
@@ -34,11 +34,12 @@ End Function
 
 Sub setPropertiesAndMat(assembComp As AssemblyDocument, file As String, tab As String, lastValue As Integer) 
 
-	colPartNo = "M" 'Part Number
-    colStockNumber = "N" 'Stock Number
+	colPartNo = "B" 'Part Number
+    colStockNumber = "C" 'Stock Number
     colDescription = "D" 'Description
 	colMaterial = "E" 'Material 
-	colPartID = "O" 'Part ID
+	colPartID = "F" 'Part ID
+	colFinish = "G" 'Finish
 	
 	Dim listkeyStrings As New List(Of String)
 
@@ -86,6 +87,13 @@ Sub setPropertiesAndMat(assembComp As AssemblyDocument, file As String, tab As S
 						    occDoc.PropertySets.Add("Database Properties")
 						 	occDoc.PropertySets("Database Properties").Add("Part ID")
 					 	End If
+				
+						If occDoc.PropertySets.PropertySetExists("Finish Properties") Then
+						 
+					    Else
+						    occDoc.PropertySets.Add("Finish Properties")
+						 	occDoc.PropertySets("Finish Properties").Add("Finish")
+					 	End If				
 					 
 				
 						'nameToCompare = occDoc.DisplayName.Substring(0, occDoc.DisplayName.LastIndexOf("."))
@@ -94,7 +102,7 @@ Sub setPropertiesAndMat(assembComp As AssemblyDocument, file As String, tab As S
 			        	'If compOcc.Name = nameOccDS Then
                  	 	If nameToCompare = nameOccDS Then 
 				        	'MsgBox(nameToCompare)
-                    	    propsAssigner(nameToCompare & ".ipt", file, tab, rowCounter, colPartNo, colStockNumber, colDescription, colMaterial, colPartID)    'compOcc.Name
+                    	    propsAssigner(nameToCompare & ".ipt", file, tab, rowCounter, colPartNo, colStockNumber, colDescription, colMaterial, colFinish)    'compOcc.Name
 					
 	                	If oFactoryDoc IsNot Nothing Then
 					    	oFactoryDoc.ComponentDefinition.ModelStates.MemberEditScope = oCurrentScope
@@ -115,6 +123,7 @@ Sub propsAssigner(compName As String, doc As String, tab As String, row As Integ
         iProperties.Expression(compName, "Project", "Part Number") = GoExcel.CellValue(doc, tab, partNo & row)
 		iProperties.Expression(compName, "Project", "Stock Number") = GoExcel.CellValue(doc, tab, stockNumber & row)
 		iProperties.Expression(compName, "Project", "Description") = GoExcel.CellValue(doc, tab, description & row)
+		iProperties.Expression(compName, "Custom", "Finish") = GoExcel.CellValue(doc, tab, finish & row)
 		iProperties.Material(compName) = GoExcel.CellValue(doc, tab, material & row)
 	Catch
 		MsgBox("Check properties in worksheet for " & compName)
