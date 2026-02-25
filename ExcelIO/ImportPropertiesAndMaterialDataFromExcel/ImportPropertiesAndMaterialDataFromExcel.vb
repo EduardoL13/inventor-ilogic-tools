@@ -117,7 +117,7 @@ Sub setPropertiesAndMat(assembComp As AssemblyDocument, file As String, tab As S
     			
 End Sub
 
-Sub propsAssigner(compName As String, doc As String, tab As String, row As Integer, partNo As String, stockNumber As String, description As String, material As String, partID As String)
+Sub propsAssigner(compName As String, doc As String, tab As String, row As Integer, partNo As String, stockNumber As String, description As String, material As String, finish As String)
 	
 	Try
         iProperties.Expression(compName, "Project", "Part Number") = GoExcel.CellValue(doc, tab, partNo & row)
