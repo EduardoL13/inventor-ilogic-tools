@@ -13,7 +13,8 @@ Catch:
 
 	MsgBox("No target spreadsheet found. Please add one and try again")
 	Exit Sub
-
+End Try
+			
 Dim tab As String = InputBox("Enter the excel worksheet name", "Worksheet to Export")
 
 If tab = ""
