@@ -33,7 +33,17 @@ Sub Main ()
                     Dim flatPattern As FlatPattern = smCompDef.FlatPattern
                
 	            ' Gets name for dxf file
-			        Dim desiredDisplayName As String =currentDoc.PropertySets.Item("Design Tracking Properties").Item("Stock Number").Value        'occDoc.DisplayName.Substring(0, occDoc.DisplayName.LastIndexOf(".")) 'removes ".ipt"
+
+					Try
+			            desiredDisplayName = currentDoc.PropertySets.Item("Design Tracking Properties").Item("Stock Number").Value
+			           	'MsgBox(desiredDisplayName)
+					   
+					Catch
+					    MsgBox("Current part " & nameToCheck & "has no Stock number/Part ID assigned")
+				        Exit Sub
+						
+					End Try
+
 			    'MsgBox(desiredDisplayName)
                 ' Creates file name
                     Dim fileName As String = System.IO.Path.Combine(targetLocation, desiredDisplayName & ".dxf") 
