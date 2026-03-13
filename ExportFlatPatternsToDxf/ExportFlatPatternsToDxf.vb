@@ -61,7 +61,7 @@ Sub Main ()
 					   
 					   Catch
 					       MsgBox("Current part " & nameToCheck & "has no Stock number/Part ID assigned")
-				           Exit For
+				           Exit Sub
 					   End Try
 				
                 ' Creates file name
