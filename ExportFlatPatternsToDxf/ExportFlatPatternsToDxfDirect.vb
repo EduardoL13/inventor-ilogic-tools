@@ -79,6 +79,7 @@ Sub Main ()
                 End If
             End If
         End If
+		End If
         Next
     MsgBox("All dxf files have been added to the chosen location")
 End Sub
