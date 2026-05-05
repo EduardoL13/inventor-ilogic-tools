@@ -1,6 +1,5 @@
 Sub Main () ' v1
-	'Objetivo: escribir en un DS uno o más parámetros que se requieran de Inventor
-	'Declarations
+
 	Dim invDoc As PartDocument = ThisDoc.Document ' Documento activo
 
 	Dim inventorParamList As UserParameters = invDoc.ComponentDefinition.Parameters.UserParameters
