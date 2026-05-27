@@ -35,7 +35,9 @@ Sub Main ()
 	Dim assemParams As UserParameters = esteDoc.ComponentDefinition.Parameters.UserParameters
 	cf_in = 2.54 ' Conversion factor cm/in (length values must be given in cm in ilogic)
 	cf_deg = PI/180 ' Conversion factor rad/Deg (angle values must be given in rad in ilogic)
-	
+	cf_mm = 1/10 ' Conversion factor mm->cm
+
+		
 	Dim assemParamsNames As New List(Of String)
 	
 	For Each aParameter In assemParams
@@ -47,6 +49,8 @@ Sub Main ()
             Try
 		        If uParameter.Units = "in"
 			        uParameter.Value = Parameter(uParameter.Name) * cf_in
+				Else If uParameter.Units = "mm"
+					uParameter.Value = Parameter(uParameter.Name) * cf_mm		
 				Else If uParameter.Units = "deg"
 					uParameter.Value = Parameter(uParameter.Name) * cf_deg
 			    End If
