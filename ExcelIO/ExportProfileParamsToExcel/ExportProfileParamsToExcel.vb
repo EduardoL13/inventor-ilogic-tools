@@ -50,29 +50,41 @@ Sub Main () ' v1
 	
 
 	'Row counter definition
-	Dim RowCounter As Integer = 2 'Row de inicio para escribir datos
+	Dim RowCounter As Integer 
+	
+	If GoExcel.CellValue(file, tab, colParameterName & 2) <> "" Then
+	    RowCounter = findLastDataRow(file,tab)
+	Else
+		RowCounter = 2
+	End If
 
 
 	For Each param As UserParameter In writeParamsList
-	    'If param.IsKey = True Then
-		If param.Comment.Contains("Profile Parameter")
-            If RowCounter = 2 Then
-	            GoExcel.CellValue(file, tab, colParameterName & RowCounter) = param.Name
-		    	cf = unitsEval(param.Units)
-	        	GoExcel.CellValue(colParameterValue & RowCounter) = param.Value * cf
-	        	GoExcel.CellValue(colParameterUnits & RowCounter) = param.Units
-    		Else
-	        	GoExcel.CellValue(colParameterName & RowCounter) = param.Name
-		    	cf = unitsEval(param.Units)
-	        	GoExcel.CellValue(colParameterValue & RowCounter) = param.Value * cf
-	        	GoExcel.CellValue(colParameterUnits & RowCounter) = param.Units
-			End If
-			RowCounter = RowCounter + 1 
-    	End If
 
-	Next
+    	If param.Comment.Contains("Profile Parameter") Then
 
-	GoExcel.Save
+       	    Dim targetRow As Integer
+
+        'Buscar si el parámetro ya existe
+        	targetRow = findParameterRow(file, tab, param.Name)
+
+        'Si no existe, escribir al final
+        	If targetRow = 0 Then
+            	targetRow = RowCounter
+            	RowCounter = RowCounter + 1
+        	End If
+
+        	cf = unitsEval(param.Units)
+
+	        GoExcel.CellValue(file, tab, colParameterName & targetRow) = param.Name
+        	GoExcel.CellValue(file, tab, colParameterValue & targetRow) = param.Value * cf
+        	GoExcel.CellValue(file, tab, colParameterUnits & targetRow) = param.Units
+
+    End If
+
+Next
+
+GoExcel.Save
 
 End Sub
 
@@ -88,3 +100,25 @@ Function unitsEval(units As String)
 	Return cf
 End Function
 
+Function findParameterRow(file As String, tab As String, parameterName As String) As Integer
+
+Dim cellVal As Object
+Dim range As Integer = 1000
+
+For rowNum As Integer = 2 To range
+
+    cellVal = GoExcel.CellValue(file, tab, "A" & rowNum)
+
+    If cellVal Is Nothing Then
+        Exit For
+    End If
+
+    If cellVal.ToString = parameterName Then
+        Return rowNum
+    End If
+
+    Next
+
+    Return 0
+
+End Function
