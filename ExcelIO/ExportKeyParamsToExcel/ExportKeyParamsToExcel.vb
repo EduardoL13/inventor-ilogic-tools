@@ -62,7 +62,7 @@ Sub Main () ' v1
 
 	For Each param As UserParameter In writeParamsList
 
-    If param.Comment.Contains("Profile Parameter") Then
+    If param.IsKey = True Then
 
         Dim targetRow As Integer
 
