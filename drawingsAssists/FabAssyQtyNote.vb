@@ -11,10 +11,17 @@ Sub Main
     Dim qtyInput As String
     qtyInput = InputBox("Ingrese la cantidad (QTY):", "Cantidad de Ensamblajes", "1")
     
-    If qtyInput = "" Then Return
+    If qtyInput = "" Then 
+		
+	Else If qtyInput = "1"
+		noteText = "FABRICATE " & qtyInput & " ASSEMBLY PER PRODUCT"
+	Else 
+    	noteText = "FABRICATE " & qtyInput & " ASSEMBLIES PER PRODUCT"
+		
+	End If
     	
     ' Definir el texto de la nota con el QTY ingresado
-    Dim noteText As String = "FABRICATE " & qtyInput & " ASSEMBLIES PER PRODUCT"
+    ' Dim noteText As String = "FABRICATE " & qtyInput & " ASSEMBLIES PER PRODUCT"
 	Dim sizeString As String = "0.32"
 	
     ' Definir el punto de inserción de la nota en la hoja (en centímetros, centro de la hoja)
