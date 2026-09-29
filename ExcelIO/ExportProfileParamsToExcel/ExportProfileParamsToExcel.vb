@@ -1,5 +1,7 @@
 Sub Main () ' v1
-
+	
+	'Objetivo: escribir en un DS uno o más parámetros que se requieran de Inventor
+	'Declarations
 	Dim invDoc As PartDocument = ThisDoc.Document ' Documento activo
 
 	Dim inventorParamList As UserParameters = invDoc.ComponentDefinition.Parameters.UserParameters
@@ -49,7 +51,7 @@ Sub Main () ' v1
 	colParameterUnits = "C" 'Column in which parameter units are listed
 	
 
-	'Row counter definition
+	'Row Counter Definition
 	Dim RowCounter As Integer 
 	
 	If GoExcel.CellValue(file, tab, colParameterName & 2) <> "" Then
@@ -57,28 +59,27 @@ Sub Main () ' v1
 	Else
 		RowCounter = 2
 	End If
+	
+For Each param As UserParameter In writeParamsList
 
+    If param.Comment.Contains("Profile Parameter") Then
 
-	For Each param As UserParameter In writeParamsList
-
-    	If param.Comment.Contains("Profile Parameter") Then
-
-       	    Dim targetRow As Integer
+        Dim targetRow As Integer
 
         'Buscar si el parámetro ya existe
-        	targetRow = findParameterRow(file, tab, param.Name)
+        targetRow = findParameterRow(file, tab, param.Name)
 
         'Si no existe, escribir al final
-        	If targetRow = 0 Then
-            	targetRow = RowCounter
-            	RowCounter = RowCounter + 1
-        	End If
+        If targetRow = 0 Then
+            targetRow = RowCounter
+            RowCounter = RowCounter + 1
+        End If
 
-        	cf = unitsEval(param.Units)
+        cf = unitsEval(param.Units)
 
-	        GoExcel.CellValue(file, tab, colParameterName & targetRow) = param.Name
-        	GoExcel.CellValue(file, tab, colParameterValue & targetRow) = param.Value * cf
-        	GoExcel.CellValue(file, tab, colParameterUnits & targetRow) = param.Units
+        GoExcel.CellValue(file, tab, colParameterName & targetRow) = param.Name
+        GoExcel.CellValue(file, tab, colParameterValue & targetRow) = param.Value * cf
+        GoExcel.CellValue(file, tab, colParameterUnits & targetRow) = param.Units
 
     End If
 
@@ -100,22 +101,38 @@ Function unitsEval(units As String)
 	Return cf
 End Function
 
+
+Function findLastDataRow(file As String, tab As String)
+	Dim cellVal As Object 
+	Dim range As Integer = 1000
+	Dim lastDataRow As Integer = 0
+    For rowNum As Integer = 1 To range
+		cellVal = GoExcel.CellValue(file, tab, "A" & rowNum)
+	    If cellVal Is Nothing  Then '(cellVal Is Nothing OrElse String.IsNullOrEmpty(cellVal.ToString()))
+			If (rowNum > range) Then Exit For
+	    Else
+			lastDataRow = rowNum + 1
+		End If
+	Next
+	Return lastDataRow
+End Function
+
 Function findParameterRow(file As String, tab As String, parameterName As String) As Integer
 
-Dim cellVal As Object
-Dim range As Integer = 1000
+    Dim cellVal As Object
+    Dim range As Integer = 1000
 
-For rowNum As Integer = 2 To range
+    For rowNum As Integer = 2 To range
 
-    cellVal = GoExcel.CellValue(file, tab, "A" & rowNum)
+        cellVal = GoExcel.CellValue(file, tab, "A" & rowNum)
 
-    If cellVal Is Nothing Then
-        Exit For
-    End If
+        If cellVal Is Nothing Then
+            Exit For
+        End If
 
-    If cellVal.ToString = parameterName Then
-        Return rowNum
-    End If
+        If cellVal.ToString = parameterName Then
+            Return rowNum
+        End If
 
     Next
 
