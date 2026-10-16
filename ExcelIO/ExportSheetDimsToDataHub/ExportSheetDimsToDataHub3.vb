@@ -155,7 +155,7 @@ Sub propsPrinter( _
         GoExcel.CellValue(file, tab, partQtyColumn & currentRow) = _
             Single.Parse(currentPart.PropertySets.Item( _
             "Design Tracking Properties").Item( _
-            "Cost Center").Value)
+            "Cost Center").Value)  'REEMPLAZAR EVENTUALMENTE POR PART QTY
 
         'Length
         GoExcel.CellValue(file, tab, partLengthColumn & currentRow) = _
