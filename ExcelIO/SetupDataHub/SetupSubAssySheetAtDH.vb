@@ -1,103 +1,148 @@
 Sub Main()
+' NOTA: SI SE QUIERE AGREGAR COMO TARGET OTRO WORKSHEET PARA CUALQUIER 
+' OTRA INFO (CUTLIST, PANELS, ETC) MODIFICAR DONDE ESTA EL COMMENT "PROP MOD"
+    Dim currentDoc As Document = ThisDoc.Document
+    Const PROP_DATAHUB As String = "Datahub"
+    Const PROP_SUBASSY As String = "SubAssySheet"    ' PROP MOD
 
-    Dim currentDoc As AssemblyDocument = ThisDoc.Document
-    Dim sFile As String = currentDoc.PropertySets.Item("Spreadsheet Document").Item("File Name").Value
+    ' Datahub must already be defined by the setup rule
+    Dim datahub As String = GetCustomProp(currentDoc, PROP_DATAHUB)
+    Dim currentSheet As String = GetCustomProp(currentDoc, PROP_SUBASSY)
 
-    ' Column where the immediate parent is written (4 = D)
-    Const PARENT_COL As Integer = 4
+    If datahub = "" Then
+        MsgBox("Datahub is not defined." & vbCrLf & "Please run the setup rule first.", _
+               MsgBoxStyle.Exclamation, "Missing property")
+        Return
+    End If
 
-    ' Ask for the worksheet name
-    Dim tab As String = InputBox("Enter the worksheet name:", "Sub-assemblies export", "")
-    If tab.Trim() = "" Then Exit Sub
-    tab = tab.Trim()
+    If Not System.IO.File.Exists(datahub) Then
+        MsgBox("The Datahub file was not found:" & vbCrLf & datahub & vbCrLf & vbCrLf & _
+               "Please run the setup rule again.", MsgBoxStyle.Exclamation, "File not found")
+        Return
+    End If
 
-    ' Open the workbook on the requested worksheet (fails if it does not exist)
-    Try
-        GoExcel.Open(sFile, tab)
-        Dim testValue As Object = GoExcel.CellValue("A1")
-    Catch ex As Exception
-        MessageBox.Show("Worksheet '" & tab & "' could not be opened in:" & vbCrLf & sFile & vbCrLf & vbCrLf & ex.Message, "Error")
-        Exit Sub
-    End Try
+    ' Read the worksheet names available in the Datahub file
+    Dim sheetNames As List(Of String) = GetSheetNames(datahub)
+    Dim newSheet As String = ""
 
-    ' Read existing rows (column A and parent column) to avoid duplicates
-    Dim seen As New HashSet(Of String)
-    Dim rowCounter As Integer = 2
-
-    While CellText("A" & rowCounter) <> "" And rowCounter < 5000
-        Dim key As String = CellText("A" & rowCounter) & "|" & CellText(ColumnLetter(PARENT_COL) & rowCounter)
-        seen.Add(key)
-        rowCounter = rowCounter + 1
-    End While
-
-    ' Collect sub-assemblies recursively
-    Dim results As New List(Of String())
-    CollectSubAssemblies(currentDoc.ComponentDefinition.Occurrences, "", results, seen)
-
-    ' Write results: name in column A, columns B and C left empty,
-    ' immediate parent (if any) in column D
-    For Each row As String() In results
-        GoExcel.CellValue("A" & rowCounter) = row(0)
-        If row(1) <> "" Then
-            GoExcel.CellValue(ColumnLetter(PARENT_COL) & rowCounter) = row(1)
+    If sheetNames Is Nothing Then
+        ' Could not open the file to validate (Excel not available, file locked, etc.)
+        Dim answer As MsgBoxResult = MsgBox("The worksheet names could not be read from the Datahub file." & vbCrLf & _
+                                            "The worksheet name will NOT be validated." & vbCrLf & vbCrLf & _
+                                            "Do you want to continue anyway?", _
+                                            MsgBoxStyle.OkCancel + MsgBoxStyle.Exclamation, "SubassySheet Setup")
+        If answer <> MsgBoxResult.Ok Then
+            MsgBox("Setup canceled. No properties were changed.", MsgBoxStyle.Information, "SubassySheet Setup")
+            Return
         End If
-        rowCounter = rowCounter + 1
-    Next
 
-    GoExcel.Save
-    GoExcel.Close
+        newSheet = InputBox("Enter the worksheet name (SubassySheet):", "SubassySheet Setup", currentSheet).Trim()
+        If newSheet = "" Then
+            MsgBox("No worksheet name entered. No properties were changed.", MsgBoxStyle.Information, "SubassySheet Setup")
+            Return
+        End If
+    Else
+        Dim defaultSheet As String = currentSheet
+        Do
+            Dim entry As String = InputBox("Enter the worksheet name (SubassySheet)." & vbCrLf & vbCrLf & _
+                                           "Available sheets: " & String.Join(", ", sheetNames), _
+                                           "SubassySheet Setup", defaultSheet).Trim()
 
-End Sub
-
-Sub CollectSubAssemblies(occs As System.Collections.IEnumerable, parentName As String, results As List(Of String()), seen As HashSet(Of String))
-
-    For Each occ As ComponentOccurrence In occs
-
-        If occ.Suppressed Then Continue For
-        If occ.DefinitionDocumentType <> DocumentTypeEnum.kAssemblyDocumentObject Then Continue For
-
-        Dim nextParent As String = parentName
-
-        If occ.BOMStructure.ToString = "kNormalBOMStructure" Then
-
-            Dim asmName As String = CleanName(occ.Definition.Document.DisplayName)
-
-            ' Row = own name + immediate parent (empty if it sits directly under the top level)
-            Dim key As String = asmName & "|" & parentName
-            If Not seen.Contains(key) Then
-                seen.Add(key)
-                results.Add(New String() {asmName, parentName})
+            If entry = "" Then
+                MsgBox("No worksheet name entered. No properties were changed.", MsgBoxStyle.Information, "SubassySheet Setup")
+                Return
             End If
 
-            ' This sub-assembly becomes the immediate parent for its children
-            nextParent = asmName
+            ' Case-insensitive match; keep the exact name as it is in the Excel file
+            Dim matchedName As String = ""
+            For Each sName As String In sheetNames
+                If String.Equals(sName, entry, StringComparison.OrdinalIgnoreCase) Then
+                    matchedName = sName
+                    Exit For
+                End If
+            Next
 
-        End If
+            If matchedName <> "" Then
+                newSheet = matchedName
+                Exit Do
+            End If
 
-        CollectSubAssemblies(occ.SubOccurrences, nextParent, results, seen)
+            Dim retry As MsgBoxResult = MsgBox("The worksheet '" & entry & "' does not exist in the Datahub file." & vbCrLf & vbCrLf & _
+                                               "Available sheets:" & vbCrLf & String.Join(vbCrLf, sheetNames) & vbCrLf & vbCrLf & _
+                                               "Do you want to try again?", _
+                                               MsgBoxStyle.OkCancel + MsgBoxStyle.Exclamation, "SubassySheet Setup")
+            If retry <> MsgBoxResult.Ok Then
+                MsgBox("Setup canceled. No properties were changed.", MsgBoxStyle.Information, "SubassySheet Setup")
+                Return
+            End If
 
-    Next
+            defaultSheet = entry
+        Loop
+    End If
+
+    ' Create/update the User Defined Property
+    SetCustomProp(currentDoc, PROP_SUBASSY, newSheet)    -------------------------- ' PROP MOD
+
+    ' Show final values (read back from the document)
+    MsgBox("Property assigned successfully:" & vbCrLf & vbCrLf & _
+           PROP_DATAHUB & " = " & GetCustomProp(currentDoc, PROP_DATAHUB) & vbCrLf & _
+           PROP_SUBASSY & " = " & GetCustomProp(currentDoc, PROP_SUBASSY), _    ----------------- ' PROP MOD
+           MsgBoxStyle.Information, "SubassySheet Setup")
 
 End Sub
 
-Function CleanName(displayName As String) As String
-    Dim idx As Integer = displayName.LastIndexOf(".")
-    If idx > 0 Then Return displayName.Substring(0, idx)
-    Return displayName
+Function GetSheetNames(filePath As String) As List(Of String)
+    ' Opens the workbook read-only in a hidden Excel instance and returns its worksheet names.
+    ' Returns Nothing if the file could not be read.
+    Dim names As New List(Of String)
+    Dim xlApp As Object = Nothing
+    Dim wb As Object = Nothing
+
+    Try
+        xlApp = CreateObject("Excel.Application")
+        xlApp.Visible = False
+        xlApp.DisplayAlerts = False
+        wb = xlApp.Workbooks.Open(filePath, 0, True) ' UpdateLinks = 0, ReadOnly = True
+
+        For i As Integer = 1 To wb.Worksheets.Count
+            names.Add(wb.Worksheets.Item(i).Name.ToString())
+        Next
+
+        Return names
+    Catch
+        Return Nothing
+    Finally
+        Try
+            If wb IsNot Nothing Then wb.Close(False)
+        Catch
+        End Try
+        Try
+            If xlApp IsNot Nothing Then xlApp.Quit()
+        Catch
+        End Try
+        If wb IsNot Nothing Then System.Runtime.InteropServices.Marshal.ReleaseComObject(wb)
+        If xlApp IsNot Nothing Then System.Runtime.InteropServices.Marshal.ReleaseComObject(xlApp)
+    End Try
 End Function
 
-Function CellText(address As String) As String
-    Dim v As Object = GoExcel.CellValue(address)
-    If v Is Nothing Then Return ""
-    Return v.ToString().Trim()
+Function GetCustomProp(doc As Document, propName As String) As String
+    Dim userProps As PropertySet = doc.PropertySets.Item("Inventor User Defined Properties")
+    For Each prop As Inventor.Property In userProps
+        If prop.Name = propName Then
+            If prop.Value Is Nothing Then Return ""
+            Return prop.Value.ToString()
+        End If
+    Next
+    Return ""
 End Function
 
-Function ColumnLetter(index As Integer) As String
-    Dim result As String = ""
-    While index > 0
-        Dim remainder As Integer = (index - 1) Mod 26
-        result = Chr(65 + remainder) & result
-        index = (index - 1) \ 26
-    End While
-    Return result
-End Function
+Sub SetCustomProp(doc As Document, propName As String, propValue As String)
+    Dim userProps As PropertySet = doc.PropertySets.Item("Inventor User Defined Properties")
+    For Each prop As Inventor.Property In userProps
+        If prop.Name = propName Then
+            prop.Value = propValue
+            Return
+        End If
+    Next
+    userProps.Add(propValue, propName)
+End Sub
