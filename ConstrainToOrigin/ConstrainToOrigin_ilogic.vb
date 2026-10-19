@@ -1,44 +1,51 @@
-Sub Main ()
+Sub Main()
 
-Dim currentDoc As AssemblyDocument = ThisApplication.ActiveDocument
-AssemblyOriginCons(currentDoc)
-	
+    Dim currentDoc As AssemblyDocument = ThisDoc.Document
+
+    ' Start a single transaction so the whole script is one undo step
+    Dim trans As Inventor.Transaction = ThisApplication.TransactionManager.StartTransaction(currentDoc, "Origin Plane Constraints")
+
+    Try
+        AssemblyOriginCons(currentDoc)
+        trans.End() ' Commit: everything above becomes ONE entry in the undo stack
+    Catch ex As Exception
+        trans.Abort() ' On error, roll back everything done so far
+        MessageBox.Show("Script aborted, changes rolled back:" & vbCrLf & ex.Message, "Error")
+    End Try
+
 End Sub
 
 
 Sub AssemblyOriginCons(assemDef As AssemblyDocument)
-	
-'Sub that runs through the occurrences of the assembly to constraint their origin planes to those of the current aassembly 
-'given that those occurrences have no prior existing constraints or that they are not part of pattern.
 
-'Set planes assembly origin planes
-Dim planoAssem1 As WorkPlane = assemDef.ComponentDefinition.WorkPlanes.Item(1)
-Dim planoAssem2 As WorkPlane = assemDef.ComponentDefinition.WorkPlanes.Item(2)
-Dim planoAssem3 As WorkPlane = assemDef.ComponentDefinition.WorkPlanes.Item(3)
-	
-For Each compOcc As ComponentOccurrence In assemDef.ComponentDefinition.Occurrences
-	If compOcc.Constraints.Count = 0 And compOcc.PatternElement Is Nothing Then
-	
-	' Set occurrences ogigin planes
-	    Dim plano1 As WorkPlane = compOcc.Definition.Workplanes.Item(1) 
-	    Dim plano2 As WorkPlane = compOcc.Definition.Workplanes.Item(2) 
-	    Dim plano3 As WorkPlane = compOcc.Definition.Workplanes.Item(3) 
-		
-	' Set proxies for making the constraints
-	    Dim planoA1 As WorkPlaneProxy
-        compOcc.CreateGeometryProxy(plano1,planoA1)
-	    Dim planoA2 As WorkPlaneProxy
-        compOcc.CreateGeometryProxy(plano2,planoA2)
-	    Dim planoA3 As WorkPlaneProxy
-        compOcc.CreateGeometryProxy(plano3, planoA3)
-		
-	' Constraints application
-	    assemDef.ComponentDefinition.Constraints.AddFlushConstraint(planoA1,planoAssem1,0)
-	    assemDef.ComponentDefinition.Constraints.AddFlushConstraint(planoA2,planoAssem2,0)
-	    assemDef.ComponentDefinition.Constraints.AddFlushConstraint(planoA3,planoAssem3,0)
-	
-    End If
-		
-Next
+    ' Assembly origin planes declaration
+    Dim PlaneE1 As WorkPlane = assemDef.ComponentDefinition.WorkPlanes.Item(1)
+    Dim PlaneE2 As WorkPlane = assemDef.ComponentDefinition.WorkPlanes.Item(2)
+    Dim PlaneE3 As WorkPlane = assemDef.ComponentDefinition.WorkPlanes.Item(3)
 
-End Sub	
+    ' Loop over occurrences and constrain each one to the origin planes
+    For Each compOcc As ComponentOccurrence In assemDef.ComponentDefinition.Occurrences
+        If compOcc.Constraints.Count = 0 And compOcc.PatternElement Is Nothing Then
+
+            ' Occurrence origin planes declaration
+            Dim Plane1 As WorkPlane = compOcc.Definition.WorkPlanes.Item(1)
+            Dim Plane2 As WorkPlane = compOcc.Definition.WorkPlanes.Item(2)
+            Dim Plane3 As WorkPlane = compOcc.Definition.WorkPlanes.Item(3)
+
+            ' Geometry proxy creation prior to constraint imposition
+            Dim APlane1 As WorkPlaneProxy = Nothing
+            compOcc.CreateGeometryProxy(Plane1, APlane1)
+            Dim APlane2 As WorkPlaneProxy = Nothing
+            compOcc.CreateGeometryProxy(Plane2, APlane2)
+            Dim APlane3 As WorkPlaneProxy = Nothing
+            compOcc.CreateGeometryProxy(Plane3, APlane3)
+
+            ' Origin planes constraint imposition
+            assemDef.ComponentDefinition.Constraints.AddFlushConstraint(APlane1, PlaneE1, 0)
+            assemDef.ComponentDefinition.Constraints.AddFlushConstraint(APlane2, PlaneE2, 0)
+            assemDef.ComponentDefinition.Constraints.AddFlushConstraint(APlane3, PlaneE3, 0)
+
+        End If
+    Next
+
+End Sub
